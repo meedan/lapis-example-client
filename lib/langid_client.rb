@@ -20,7 +20,7 @@ module LangidClient
     def self.get_languages_classify(host = nil, params = {}, token = '', headers = {})
       request('get', host, '/api/languages/classify', params, token, headers)
     end
-         
+           
     private
 
     def self.request(method, host, path, params = {}, token = '', headers = {})
@@ -44,7 +44,7 @@ module LangidClient
 
       http = Net::HTTP.new(uri.hostname, uri.port)
       http.use_ssl = uri.scheme == 'https'
-      response = http.request(request) 
+      response = http.request(request)
       if response.code.to_i === 401
         raise 'Unauthorized'
       else
@@ -65,7 +65,7 @@ module LangidClient
       yield
       WebMock.allow_net_connect!
     end
-           
+             
     def self.mock_languages_classify_returns_parameter_text_is_missing(host = nil)
       WebMock.disable_net_connect!
       host ||= LangidClient.host
@@ -76,7 +76,7 @@ module LangidClient
       yield
       WebMock.allow_net_connect!
     end
-           
+             
     def self.mock_languages_classify_returns_access_denied(host = nil)
       WebMock.disable_net_connect!
       host ||= LangidClient.host
@@ -87,6 +87,13 @@ module LangidClient
       yield
       WebMock.allow_net_connect!
     end
-           
+             
+  end
+
+  module Util
+    
+    def self.normalize(text)
+      text.downcase.gsub(/àáãâ/, 'a').gsub(/èéẽê/, 'e').gsub(/íìĩî/, 'i').gsub(/óòõô/, 'o').gsub(/úùũû/, 'u').gsub('ç', 'c')
+    end
   end
 end
